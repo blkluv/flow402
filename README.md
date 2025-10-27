@@ -132,9 +132,6 @@ Flow402x is blockchain-agnostic and currently supports any x402-compatible netwo
 
 - Base (USDC)
 - Solana (USDC-SPL)
-- Arbitrum (USDC / USDT)
-- Ethereum (DAI)
-- Polygon (USDC)
 
 New networks can be integrated through Flow Token Adapters, which handle transaction formatting and validation.
 
