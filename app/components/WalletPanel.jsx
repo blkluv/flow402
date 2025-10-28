@@ -32,7 +32,7 @@ export default function WalletPanel({ onApprovalSuccess, onStop }) {
       });
       
       // Start backend streaming
-      await fetch("http://localhost:4020/start", {
+      await fetch("https://flowserver.onrender.com/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userPubkey: publicKey.toString() }),
@@ -55,7 +55,7 @@ export default function WalletPanel({ onApprovalSuccess, onStop }) {
   }
 
   async function handleStop() {
-    await fetch("http://localhost:4020/stop", { method: "POST" });
+    await fetch("https://flowserver.onrender.com/stop", { method: "POST" });
     setApproved(false);
     if (onStop) {
       onStop();
@@ -106,4 +106,5 @@ export default function WalletPanel({ onApprovalSuccess, onStop }) {
 
     </div>
   );
+
 }
