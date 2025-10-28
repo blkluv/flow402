@@ -33,6 +33,9 @@ function Header() {
           <span className="font-semibold tracking-tight">flow402x</span>
         </a>
         <div className="flex items-center gap-6 text-sm text-gray-300">
+          <a href="/create" className="hover:text-white transition">
+            Create
+          </a>
           <a
             href="https://github.com/JamieMay2020/flow402/tree/main"
             target="_blank"

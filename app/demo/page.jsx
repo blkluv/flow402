@@ -5,10 +5,15 @@ import Player from "../components/Player";
 import WalletPanel from "../components/WalletPanel";
 import TxLog from "../components/TxLog";
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+
 export default function DemoPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  const [selectedType, setSelectedType] = useState(null); // track selected video
+  const [selectedType, setSelectedType] = useState(null); // built-in types
+  const [selectedVideo, setSelectedVideo] = useState(null); // custom video from backend
+  const [videos, setVideos] = useState([]);
+  const [loadingVideos, setLoadingVideos] = useState(true);
 
   const handleApprovalSuccess = async () => {
   console.log("✅ Approval successful, waiting for first transfer...");
@@ -74,6 +79,24 @@ export default function DemoPage() {
     },
   ];
 
+  // 🔹 Fetch approved videos from backend
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/videos`);
+        const data = await res.json();
+        if (!mounted) return;
+        setVideos(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error("Failed to load videos:", e);
+      } finally {
+        if (mounted) setLoadingVideos(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <main className="min-h-screen text-white bg-gradient-to-b from-black via-[#0a0a0a] to-black">
       <div className="max-w-7xl mx-auto px-6 py-16 space-y-10">
@@ -85,33 +108,88 @@ export default function DemoPage() {
         </header>
 
         {/* ✅ Stream Selection */}
-        {!selectedType ? (
-          <div className="grid md:grid-cols-3 gap-8">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedType(item.id)}
-                className="cursor-pointer glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300 group"
-              >
-                <div className="relative w-full aspect-[16/9] overflow-hidden">
-                  <img
-                    src={item.thumbnail}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+        {!selectedType && !selectedVideo ? (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Built-in demo items</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => { setSelectedType(item.id); setSelectedVideo(null); }}
+                  className="cursor-pointer glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300 group"
+                >
+                  <div className="relative w-full aspect-[16/9] overflow-hidden">
+                    <img
+                      src={item.thumbnail}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-5 text-left">
+                    <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
+                    <p className="text-gray-400 text-sm">{item.description}</p>
+                  </div>
                 </div>
-                <div className="p-5 text-left">
-                  <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
-                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Approved videos</h2>
+              <button
+                className="text-sm text-gray-400 hover:text-white"
+                onClick={async () => {
+                  setLoadingVideos(true);
+                  try {
+                    const res = await fetch(`${API_BASE}/videos`);
+                    const data = await res.json();
+                    setVideos(Array.isArray(data) ? data : []);
+                  } catch (e) {
+                    console.error(e);
+                  } finally {
+                    setLoadingVideos(false);
+                  }
+                }}
+              >Refresh</button>
+            </div>
+
+            {loadingVideos ? (
+              <div className="glass rounded-xl p-5 text-gray-400">Loading approved videos…</div>
+            ) : videos.length === 0 ? (
+              <div className="glass rounded-xl p-5 text-gray-400">No approved videos yet.</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                {videos.map((v) => (
+                  <div
+                    key={`video-${v.id}`}
+                    onClick={() => { setSelectedVideo(v); setSelectedType(null); }}
+                    className="cursor-pointer glass rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-300 group"
+                  >
+                    <div className="relative w-full aspect-[16/9] overflow-hidden">
+                      <img
+                        src={v.thumbnailUrl}
+                        alt={v.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-5 text-left">
+                      <h3 className="text-xl font-semibold mb-1">{v.title}</h3>
+                      {v.description && (
+                        <p className="text-gray-400 text-sm break-all">{v.description}</p>
+                      )}
+                      <p className="text-gray-500 text-xs">{(v.lamportsPerSecond/100000).toFixed(0) / 10} FLOW / second</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <>
             <div className="grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 glass p-6">
-                <Player isPlaying={isPlaying} type={selectedType} />
+                <Player isPlaying={isPlaying} type={selectedType} video={selectedVideo} />
               </div>
 
               <div className="space-y-6">
@@ -130,6 +208,7 @@ export default function DemoPage() {
             <button
               onClick={() => {
                 setSelectedType(null);
+                setSelectedVideo(null);
                 setIsPlaying(false);
               }}
               className="mt-10 text-gray-400 hover:text-white underline underline-offset-2"

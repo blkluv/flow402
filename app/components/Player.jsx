@@ -2,13 +2,26 @@
 
 import { useEffect, useRef } from "react";
 
-export default function Player({ isPlaying, type = "random" }) {
+export default function Player({ isPlaying, type = "random", video = null }) {
   const videoRef = useRef(null);
   const youtubeRef = useRef(null);
   const playerRef = useRef(null);
 
+  function extractYouTubeId(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname === "youtu.be") return u.pathname.slice(1).split("?")[0];
+      if (u.hostname.includes("youtube.com")) {
+        if (u.pathname.startsWith("/embed/")) return u.pathname.split("/embed/")[1].split("/")[0];
+        if (u.searchParams.get("v")) return u.searchParams.get("v");
+      }
+    } catch {}
+    return null;
+  }
+
   useEffect(() => {
-    if (type !== "youtube") return;
+    const isYouTube = type === "youtube" || (!!video && extractYouTubeId(video.videoUrl));
+    if (!isYouTube) return;
     
     // Load the YouTube iframe API script once
     if (!window.YT) {
@@ -27,23 +40,24 @@ export default function Player({ isPlaying, type = "random" }) {
         },
       });
     };
-  }, [type]);
+  }, [type, video]);
 
   useEffect(() => {
-    if (type === "youtube" && playerRef.current) {
+    const isYouTube = type === "youtube" || (!!video && extractYouTubeId(video.videoUrl));
+    if (isYouTube && playerRef.current) {
       if (isPlaying) {
         playerRef.current.playVideo();
       } else {
         playerRef.current.pauseVideo();
       }
-    } else if (type !== "youtube" && videoRef.current) {
+    } else if (!isYouTube && videoRef.current) {
       if (isPlaying) {
         videoRef.current.play().catch(() => {});
       } else {
         videoRef.current.pause();
       }
     }
-  }, [isPlaying, type]);
+  }, [isPlaying, type, video]);
 
   const sources = {
     youtube: {
@@ -61,7 +75,15 @@ export default function Player({ isPlaying, type = "random" }) {
     },
   };
 
-  const src = sources[type] || sources.random;
+  let src = sources[type] || sources.random;
+  if (video) {
+    const ytId = extractYouTubeId(video.videoUrl);
+    if (ytId) {
+      src = { kind: "youtube", id: ytId };
+    } else {
+      src = { kind: "video", url: video.videoUrl, poster: video.thumbnailUrl };
+    }
+  }
 
   return (
     <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
