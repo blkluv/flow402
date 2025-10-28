@@ -16,6 +16,7 @@ export default function CreatePage() {
   const [videoUrl, setVideoUrl] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [lamportsPerSecond, setLamportsPerSecond] = useState("1000000");
+  const [contentType, setContentType] = useState("video");
   function extractYouTubeId(url) {
     try {
       const u = new URL(url);
@@ -30,14 +31,40 @@ export default function CreatePage() {
     return null;
   }
 
+  function extractTwitchChannel(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("twitch.tv")) {
+        if (u.hostname === "player.twitch.tv") {
+          return u.searchParams.get("channel") || null;
+        }
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts.length > 0) return parts[0];
+      }
+    } catch {}
+    return null;
+  }
+
   function handleVideoUrlChange(val) {
     setVideoUrl(val);
-    const id = extractYouTubeId(val);
-    if (id) {
-      const embed = `https://www.youtube.com/embed/${id}`;
-      const thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    
+    // Try YouTube
+    const ytId = extractYouTubeId(val);
+    if (ytId) {
+      const embed = `https://www.youtube.com/embed/${ytId}`;
+      const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
       setVideoUrl(embed);
       if (!thumbnailUrl) setThumbnailUrl(thumb);
+      return;
+    }
+    
+    // Try Twitch
+    const twitchChan = extractTwitchChannel(val);
+    if (twitchChan) {
+      const parent = window.location.hostname || "flow402.dev";
+      const embed = `https://player.twitch.tv/?channel=${twitchChan}&parent=${parent}`;
+      setVideoUrl(embed);
+      return;
     }
   }
 
@@ -64,6 +91,7 @@ export default function CreatePage() {
         videoUrl,
         thumbnailUrl,
         lamportsPerSecond: Number(lamportsPerSecond),
+        contentType,
       };
 
       const resp = await fetch(`${API_BASE}/videos`, {
@@ -126,6 +154,23 @@ export default function CreatePage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-300 mb-1">Content Type</label>
+            <select
+              className="w-full bg-black/30 border border-neutral-800 rounded px-3 py-2 text-sm outline-none focus:border-neutral-600"
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value)}
+            >
+              <option value="video">Video (VOD)</option>
+              <option value="live">Livestream</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              {contentType === "live" 
+                ? "Paste your YouTube Live or Twitch embed URL"
+                : "Upload a pre-recorded video"}
+            </p>
           </div>
 
           <div>

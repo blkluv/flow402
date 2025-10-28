@@ -20,6 +20,20 @@ export default function Player({ isPlaying, type = "random", video = null }) {
     return null;
   }
 
+  function extractTwitchChannel(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("twitch.tv")) {
+        if (u.hostname === "player.twitch.tv") {
+          return u.searchParams.get("channel") || null;
+        }
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts.length > 0) return parts[0];
+      }
+    } catch {}
+    return null;
+  }
+
   useEffect(() => {
     const isYouTube = type === "youtube" || (!!video && extractYouTubeId(video.videoUrl));
     if (!isYouTube) return;
@@ -79,8 +93,11 @@ export default function Player({ isPlaying, type = "random", video = null }) {
   let src = sources[type] || sources.random;
   if (video) {
     const ytId = extractYouTubeId(video.videoUrl);
+    const twitchChan = extractTwitchChannel(video.videoUrl);
     if (ytId) {
       src = { kind: "youtube", id: ytId };
+    } else if (twitchChan) {
+      src = { kind: "twitch", channel: twitchChan };
     } else {
       src = { kind: "video", url: video.videoUrl, poster: video.thumbnailUrl };
     }
@@ -122,10 +139,19 @@ export default function Player({ isPlaying, type = "random", video = null }) {
           id="yt-player"
           ref={youtubeRef}
           className="w-full h-full"
-          src={`https://www.youtube.com/embed/${src.id}?enablejsapi=1&controls=1&rel=0&modestbranding=1`}
+          src={`https://www.youtube.com/embed/${src.id}?enablejsapi=1&controls=1&rel=0&modestbranding=1&autoplay=${isPlaying ? 1 : 0}`}
           title="YouTube video player"
           frameBorder="0"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : src.kind === "twitch" ? (
+        <iframe
+          className="w-full h-full"
+          src={`https://player.twitch.tv/?channel=${src.channel}&parent=${window.location.hostname}&autoplay=${isPlaying ? "true" : "false"}`}
+          title="Twitch stream player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
       ) : (

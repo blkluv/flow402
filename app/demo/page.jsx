@@ -173,6 +173,11 @@ export default function DemoPage() {
                         alt={v.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                      {v.contentType === 'live' && (
+                        <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                          LIVE
+                        </div>
+                      )}
                     </div>
                     <div className="p-5 text-left">
                       <h3 className="text-xl font-semibold mb-1">{v.title}</h3>
