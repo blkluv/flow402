@@ -19,7 +19,7 @@ export default function DemoPage() {
   // Poll until first on-chain transfer confirmed
   const checkStatus = async () => {
     try {
-      const res = await fetch("http://localhost:4020/status");
+      const res = await fetch("https://flowserver.onrender.com/status");
       const data = await res.json();
       if (data.firstTransferConfirmed) {
         console.log("🎬 First transfer confirmed — starting video");
@@ -48,7 +48,7 @@ export default function DemoPage() {
     if (!isPlaying) return;
     const interval = setInterval(async () => {
       try {
-        const res = await fetch("http://localhost:4020/logs");
+        const res = await fetch("https://flowserver.onrender.com/logs");
         const logs = await res.json();
         setTransactions(logs);
       } catch (e) {
@@ -142,3 +142,4 @@ export default function DemoPage() {
     </main>
   );
 }
+
