@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Player({ isPlaying, type = "random", video = null }) {
   const videoRef = useRef(null);
   const youtubeRef = useRef(null);
   const playerRef = useRef(null);
+  const [showInfo, setShowInfo] = useState(false);
 
   function extractYouTubeId(url) {
     try {
@@ -87,6 +88,22 @@ export default function Player({ isPlaying, type = "random", video = null }) {
 
   return (
     <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+      {video?.ownerPublicKey && (
+        <button
+          type="button"
+          onClick={() => setShowInfo((v) => !v)}
+          className="absolute top-3 right-3 z-20 bg-white/10 hover:bg-white/20 text-white text-xs px-2 py-1 rounded"
+        >
+          Info
+        </button>
+      )}
+
+      {showInfo && video?.ownerPublicKey && (
+        <div className="absolute top-10 right-3 z-20 bg-black/80 border border-neutral-700 rounded p-3 text-xs text-gray-200 max-w-[80%]">
+          <div className="font-semibold mb-1">Creator Wallet</div>
+          <div className="break-all text-gray-300">{video.ownerPublicKey}</div>
+        </div>
+      )}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
           <div className="text-center">

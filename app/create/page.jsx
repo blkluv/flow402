@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+const RAW_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+const API_BASE = RAW_BASE.endsWith("/") ? RAW_BASE.slice(0, -1) : RAW_BASE;
 
 export default function CreatePage() {
   const { publicKey, connected } = useWallet();

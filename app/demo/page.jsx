@@ -5,7 +5,8 @@ import Player from "../components/Player";
 import WalletPanel from "../components/WalletPanel";
 import TxLog from "../components/TxLog";
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+const RAW_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+const API_BASE = RAW_BASE.endsWith("/") ? RAW_BASE.slice(0, -1) : RAW_BASE;
 
 export default function DemoPage() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -197,6 +198,7 @@ export default function DemoPage() {
                   <WalletPanel
                     onApprovalSuccess={handleApprovalSuccess}
                     onStop={handleStop}
+                    uploaderPubkey={selectedVideo ? selectedVideo.ownerPublicKey : undefined}
                   />
                 </div>
                 <div className="glass p-6">

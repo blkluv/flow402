@@ -10,7 +10,10 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-export default function WalletPanel({ onApprovalSuccess, onStop }) {
+const RAW_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flowserver.onrender.com";
+const API_BASE = RAW_BASE.endsWith("/") ? RAW_BASE.slice(0, -1) : RAW_BASE;
+
+export default function WalletPanel({ onApprovalSuccess, onStop, uploaderPubkey }) {
   const { publicKey, connected, sendTransaction } = useWallet();
   const [busy, setBusy] = useState(false);
   const [approved, setApproved] = useState(false);
@@ -32,10 +35,10 @@ export default function WalletPanel({ onApprovalSuccess, onStop }) {
       });
       
       // Start backend streaming
-      await fetch("https://flowserver.onrender.com/start", {
+      await fetch(`${API_BASE}/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userPubkey: publicKey.toString() }),
+        body: JSON.stringify({ userPubkey: publicKey.toString(), uploaderPubkey }),
       });
       
       setApproved(true);
@@ -55,7 +58,7 @@ export default function WalletPanel({ onApprovalSuccess, onStop }) {
   }
 
   async function handleStop() {
-    await fetch("https://flowserver.onrender.com/stop", { method: "POST" });
+    await fetch(`${API_BASE}/stop`, { method: "POST" });
     setApproved(false);
     if (onStop) {
       onStop();
