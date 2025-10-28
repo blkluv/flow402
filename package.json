@@ -1,108 +1,33 @@
 {
-  "name": "flow402x",
-  "version": "0.3.1",
-  "description": "An open protocol for pay-per-view and pay-per-second streaming built on x402. Enables autonomous, real-time micropayments over HTTP 402.",
-  "keywords": [
-    "web3",
-    "x402",
-    "micropayments",
-    "streaming",
-    "protocol",
-    "ai-agents",
-    "crypto",
-    "solana",
-    "base",
-    "sdk",
-    "middleware"
-  ],
-  "author": {
-    "name": "Flow402x",
-    "email": "dev@flow402x.dev",
-    "url": "https://flow402x.dev"
-  },
-  "homepage": "https://flow402x.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://git.flow402x.dev/flow402x.git"
-  },
-  "bugs": {
-    "url": "https://git.flow402x.dev/issues"
-  },
+  "name": "flow402x-frontend",
+  "private": true,
+  "version": "0.1.0",
   "type": "module",
-  "main": "sdk/index.js",
-  "module": "sdk/index.js",
-  "exports": {
-    ".": {
-      "import": "./sdk/index.js",
-      "require": "./sdk/index.cjs"
-    },
-    "./middleware": {
-      "import": "./sdk/flowMiddleware.js"
-    },
-    "./adapters": {
-      "import": "./sdk/adapters/index.js"
-    }
-  },
-  "files": [
-    "sdk",
-    "docs",
-    "examples",
-    "LICENSE",
-    "README.md"
-  ],
   "scripts": {
-    "start": "node examples/node-server-example/server.js",
-    "dev": "nodemon examples/node-server-example/server.js",
-    "test": "jest --runInBand",
-    "lint": "eslint . --ext .js,.mjs --max-warnings=0",
-    "build": "rollup -c",
-    "prepare": "npm run build"
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
   },
   "dependencies": {
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.0",
-    "ethers": "^6.12.0",
-    "axios": "^1.7.2",
-    "express": "^4.19.2",
-    "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2",
-    "cross-fetch": "^4.0.0",
-    "uuid": "^9.0.1"
+    "@solana/spl-token": "^0.4.7",
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "socket.io-client": "^4.7.5",
+    "lucide-react": "^0.454.0"
   },
   "devDependencies": {
-    "eslint": "^9.3.0",
-    "jest": "^29.7.0",
-    "rollup": "^4.17.2",
-    "nodemon": "^3.1.4",
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.4",
-    "babel-jest": "^29.7.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "moduleFileExtensions": ["js", "mjs"],
-    "collectCoverageFrom": ["sdk/**/*.js"]
-  },
-  "eslintConfig": {
-    "env": {
-      "es2021": true,
-      "node": true,
-      "jest": true
-    },
-    "extends": ["eslint:recommended"],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module"
-    },
-    "rules": {
-      "no-unused-vars": ["warn"],
-      "semi": ["error", "always"]
-    }
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "funding": {
-    "type": "individual",
-    "url": "https://flow402x.dev/funding"
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.5.2"
   }
 }
