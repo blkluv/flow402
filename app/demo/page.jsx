@@ -64,7 +64,7 @@ export default function DemoPage() {
       id: "youtube",
       title: "YouTube Stream",
       description: "Play a live or demo YouTube video.",
-      thumbnail: "https://img.youtube.com/vi/1jzROE6EhxM/hqdefault.jpg,
+      thumbnail: "https://img.youtube.com/vi/1jzROE6EhxM/hqdefault.jpg",
     },
     {
       id: "movie",
@@ -142,5 +142,6 @@ export default function DemoPage() {
     </main>
   );
 }
+
 
 
