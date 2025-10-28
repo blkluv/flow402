@@ -48,7 +48,7 @@ export default function Player({ isPlaying, type = "random" }) {
   const sources = {
     youtube: {
       kind: "youtube",
-      id: "KV_qe_YAGoQ", // YouTube video ID
+      id: "1jzROE6EhxM", // YouTube video ID
     },
     movie: {
       kind: "video",
@@ -106,3 +106,4 @@ export default function Player({ isPlaying, type = "random" }) {
     </div>
   );
 }
+
