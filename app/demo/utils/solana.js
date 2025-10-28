@@ -34,7 +34,7 @@ export async function approveForFlow({
   userPublicKey,
   sendTransaction,
   gatewayPubkey = process.env.NEXT_PUBLIC_GATEWAY_PUBKEY,
-  allowance = 1000,
+  allowance = 1.0,
   usdcMint = process.env.NEXT_PUBLIC_USDC_MINT
 }) {
   console.log("DEBUG env check →", gatewayPubkey, usdcMint);
@@ -69,5 +69,6 @@ export async function approveForFlow({
   await connection.confirmTransaction(sig, "confirmed");
   return sig;
 }
+
 
 
