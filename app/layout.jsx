@@ -4,6 +4,9 @@ import Providers from "./providers";
 export const metadata = {
   title: "flow402x",
   description: "Open protocol demo: pay-per-second streaming via HTTP 402 + Solana devnet."
+    icons: {
+    icon: "favicon-32x32.png", // ✅ Add your favicon here
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -58,3 +61,4 @@ function Header() {
     </header>
   );
 }
+
