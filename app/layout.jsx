@@ -6,7 +6,7 @@ export const metadata = {
   description:
     "Open protocol demo: pay-per-second streaming via HTTP 402 + Solana devnet.",
   icons: {
-    icon: "/favicon-32x32.png", // ✅ or "/favicon.png"
+    icon: "favicon-32x32.png",
   },
 };
 
@@ -62,5 +62,6 @@ function Header() {
     </header>
   );
 }
+
 
 
