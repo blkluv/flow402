@@ -41,10 +41,10 @@ export default function Landing() {
               href="#overview"
               className="bg-neutral-900 hover:bg-neutral-800 px-6 py-3 rounded-lg transition"
             >
-              Learn More
+              For Devs
             </a>
             <a
-              href="https://github.com/"
+              href="https://github.com/JamieMay2020/flow402/tree/main"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-neutral-900 hover:bg-neutral-800 px-6 py-3 rounded-lg transition"
@@ -165,3 +165,4 @@ function Feature({ title, text }) {
     </div>
   );
 }
+
