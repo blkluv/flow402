@@ -165,11 +165,14 @@ export default function CreatePage() {
             >
               <option value="video">Video (VOD)</option>
               <option value="live">Livestream</option>
+              <option value="movie">Movie</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">
               {contentType === "live" 
                 ? "Paste your YouTube Live or Twitch embed URL"
-                : "Upload a pre-recorded video"}
+                : contentType === "movie"
+                ? "Full-length film or long-form content"
+                : "Pre-recorded video content"}
             </p>
           </div>
 

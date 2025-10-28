@@ -15,6 +15,7 @@ export default function DemoPage() {
   const [selectedVideo, setSelectedVideo] = useState(null); // custom video from backend
   const [videos, setVideos] = useState([]);
   const [loadingVideos, setLoadingVideos] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   const handleApprovalSuccess = async () => {
   console.log("✅ Approval successful, waiting for first transfer...");
@@ -136,23 +137,67 @@ export default function DemoPage() {
               ))}
             </div>
 
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Approved videos</h2>
-              <button
-                className="text-sm text-gray-400 hover:text-white"
-                onClick={async () => {
-                  setLoadingVideos(true);
-                  try {
-                    const res = await fetch(`${API_BASE}/videos`);
-                    const data = await res.json();
-                    setVideos(Array.isArray(data) ? data : []);
-                  } catch (e) {
-                    console.error(e);
-                  } finally {
-                    setLoadingVideos(false);
-                  }
-                }}
-              >Refresh</button>
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold">Approved videos</h2>
+                <button
+                  className="text-sm text-gray-400 hover:text-white"
+                  onClick={async () => {
+                    setLoadingVideos(true);
+                    try {
+                      const res = await fetch(`${API_BASE}/videos`);
+                      const data = await res.json();
+                      setVideos(Array.isArray(data) ? data : []);
+                    } catch (e) {
+                      console.error(e);
+                    } finally {
+                      setLoadingVideos(false);
+                    }
+                  }}
+                >Refresh</button>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setFilter('all')}
+                  className={`px-4 py-2 rounded text-sm transition ${
+                    filter === 'all' 
+                      ? 'bg-white text-black font-semibold' 
+                      : 'bg-neutral-800 text-gray-300 hover:bg-neutral-700'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setFilter('video')}
+                  className={`px-4 py-2 rounded text-sm transition ${
+                    filter === 'video' 
+                      ? 'bg-white text-black font-semibold' 
+                      : 'bg-neutral-800 text-gray-300 hover:bg-neutral-700'
+                  }`}
+                >
+                  Videos
+                </button>
+                <button
+                  onClick={() => setFilter('live')}
+                  className={`px-4 py-2 rounded text-sm transition ${
+                    filter === 'live' 
+                      ? 'bg-white text-black font-semibold' 
+                      : 'bg-neutral-800 text-gray-300 hover:bg-neutral-700'
+                  }`}
+                >
+                  Livestreams
+                </button>
+                <button
+                  onClick={() => setFilter('movie')}
+                  className={`px-4 py-2 rounded text-sm transition ${
+                    filter === 'movie' 
+                      ? 'bg-white text-black font-semibold' 
+                      : 'bg-neutral-800 text-gray-300 hover:bg-neutral-700'
+                  }`}
+                >
+                  Movies
+                </button>
+              </div>
             </div>
 
             {loadingVideos ? (
@@ -161,7 +206,7 @@ export default function DemoPage() {
               <div className="glass rounded-xl p-5 text-gray-400">No approved videos yet.</div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {videos.map((v) => (
+                {videos.filter(v => filter === 'all' || v.contentType === filter).map((v) => (
                   <div
                     key={`video-${v.id}`}
                     onClick={() => { setSelectedVideo(v); setSelectedType(null); }}
