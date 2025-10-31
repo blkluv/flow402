@@ -101,9 +101,9 @@ export default function DemoPage() {
 
   return (
     <main className="min-h-screen text-white bg-gradient-to-b from-black via-[#0a0a0a] to-black">
-      <div className="max-w-7xl mx-auto px-6 py-16 space-y-10">
+      <div className="px-6 py-16 mx-auto space-y-10 max-w-7xl">
         <header>
-          <h1 className="text-3xl font-bold mb-2">Flow402x Demo</h1>
+          <h1 className="mb-2 text-3xl font-bold">WEB5DTV. Demo</h1>
           <p className="text-gray-400">
             Select a stream below to start a pay-per-second session.
           </p>
@@ -115,7 +115,7 @@ export default function DemoPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Built-in demo items</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
+            <div className="grid grid-cols-1 gap-8 mb-10 sm:grid-cols-2 md:grid-cols-3">
               {items.map((item) => (
                 <div
                   key={item.id}
@@ -126,12 +126,12 @@ export default function DemoPage() {
                     <img
                       src={item.thumbnail}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-5 text-left">
-                    <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
-                    <p className="text-gray-400 text-sm">{item.description}</p>
+                    <h3 className="mb-1 text-xl font-semibold">{item.title}</h3>
+                    <p className="text-sm text-gray-400">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -201,11 +201,11 @@ export default function DemoPage() {
             </div>
 
             {loadingVideos ? (
-              <div className="glass rounded-xl p-5 text-gray-400">Loading approved videos…</div>
+              <div className="p-5 text-gray-400 glass rounded-xl">Loading approved videos…</div>
             ) : videos.length === 0 ? (
-              <div className="glass rounded-xl p-5 text-gray-400">No approved videos yet.</div>
+              <div className="p-5 text-gray-400 glass rounded-xl">No approved videos yet.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {videos.filter(v => filter === 'all' || v.contentType === filter).map((v) => (
                   <div
                     key={`video-${v.id}`}
@@ -216,20 +216,20 @@ export default function DemoPage() {
                       <img
                         src={v.thumbnailUrl}
                         alt={v.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                       />
                       {v.contentType === 'live' && (
-                        <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                        <div className="absolute px-2 py-1 text-xs font-bold text-white bg-red-600 rounded top-2 left-2">
                           LIVE
                         </div>
                       )}
                     </div>
                     <div className="p-5 text-left">
-                      <h3 className="text-xl font-semibold mb-1">{v.title}</h3>
+                      <h3 className="mb-1 text-xl font-semibold">{v.title}</h3>
                       {v.description && (
-                        <p className="text-gray-400 text-sm break-all">{v.description}</p>
+                        <p className="text-sm text-gray-400 break-all">{v.description}</p>
                       )}
-                      <p className="text-gray-500 text-xs">{(v.lamportsPerSecond/100000).toFixed(0) / 10} FLOW / second</p>
+                      <p className="text-xs text-gray-500">{(v.lamportsPerSecond/100000).toFixed(0) / 10} FLOW / second</p>
                     </div>
                   </div>
                 ))}
@@ -238,20 +238,20 @@ export default function DemoPage() {
           </>
         ) : (
           <>
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 glass p-6">
+            <div className="grid gap-8 lg:grid-cols-3">
+              <div className="p-6 lg:col-span-2 glass">
                 <Player isPlaying={isPlaying} type={selectedType} video={selectedVideo} />
               </div>
 
               <div className="space-y-6">
-                <div className="glass p-6">
+                <div className="p-6 glass">
                   <WalletPanel
                     onApprovalSuccess={handleApprovalSuccess}
                     onStop={handleStop}
                     uploaderPubkey={selectedVideo ? selectedVideo.ownerPublicKey : undefined}
                   />
                 </div>
-                <div className="glass p-6">
+                <div className="p-6 glass">
                   <TxLog transactions={transactions} />
                 </div>
               </div>
@@ -263,7 +263,7 @@ export default function DemoPage() {
                 setSelectedVideo(null);
                 setIsPlaying(false);
               }}
-              className="mt-10 text-gray-400 hover:text-white underline underline-offset-2"
+              className="mt-10 text-gray-400 underline hover:text-white underline-offset-2"
             >
               ← Back to stream selection
             </button>
