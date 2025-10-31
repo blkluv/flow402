@@ -35,21 +35,21 @@ export default function Landing() {
               className="button-primary"
               onClick={() => setShowTransition(true)}
             >
-              View Demo
+              Demo
             </button>
             <a
               href="#overview"
               className="px-6 py-3 transition rounded-lg bg-neutral-900 hover:bg-neutral-800"
             >
-              For Devs
+              Learn More
             </a>
             <a
-              href="https://github.com/JamieMay2020/flow402/tree/main"
+              href="https://hahz.live"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 transition rounded-lg bg-neutral-900 hover:bg-neutral-800"
             >
-              GitHub
+              Subscribe
             </a>
           </div>
         </div>
